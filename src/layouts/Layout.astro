@@ -1,6 +1,6 @@
 ---
 import "../styles/global.css";
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 import Analytics from "@vercel/analytics/astro";
 interface Props {
     title?: string;
@@ -87,7 +87,7 @@ const siteUrl = "https://lia-nails-app.vercel.app";
         />
 
         <!-- View Transitions for smooth navigation -->
-        <ViewTransitions />
+        <ClientRouter />
 
         <!-- Prevenir FOUC durante transiciones -->
 
