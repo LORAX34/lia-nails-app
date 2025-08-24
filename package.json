@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@shikijs/engine-oniguruma": "^3.11.0",
-    "astro": "^5.12.2"
+    "@tailwindcss/vite": "^4.1.12",
+    "astro": "^5.12.2",
+    "tailwindcss": "^4.1.12"
   }
 }
