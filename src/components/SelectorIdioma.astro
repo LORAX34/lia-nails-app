@@ -111,6 +111,64 @@ const pathWithoutLang = currentPath.replace(/^\/(en|es)/, "") || "/";
             font-size: 0.875rem;
         }
     }
+
+    /* Prevenir FOUC - estilos inline críticos */
+    .dropdown {
+        display: inline-block;
+        position: relative;
+    }
+
+    .dropdown button {
+        background-color: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(4px);
+        border: 1px solid rgb(209, 213, 219);
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 500;
+        font-size: 0.875rem;
+        color: rgb(55, 65, 81);
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid rgb(209, 213, 219);
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        margin-top: 0.25rem;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(4px);
+        transition: all 0.2s;
+        min-width: max-content;
+        overflow: hidden;
+        z-index: 50;
+    }
+
+    .dropdown-menu a {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: rgb(55, 65, 81);
+        text-decoration: none;
+        transition: all 0.15s;
+        white-space: nowrap;
+    }
+
+    .dropdown-menu a:hover {
+        background-color: rgb(249, 250, 251);
+    }
 </style>
 
 <script is:inline>
@@ -202,6 +260,23 @@ const pathWithoutLang = currentPath.replace(/^\/(en|es)/, "") || "/";
         initLanguageSelector();
     }
 
-    // Re-inicializar después de navegación
-    document.addEventListener("astro:page-load", initLanguageSelector);
+    // Re-inicializar después de navegación con delay para evitar FOUC
+    document.addEventListener("astro:page-load", () => {
+        setTimeout(initLanguageSelector, 50);
+    });
+
+    // Prevenir FOUC aplicando estilos inmediatamente
+    document.addEventListener("astro:before-preparation", () => {
+        const selector = document.querySelector(".dropdown");
+        if (selector) {
+            selector.style.visibility = "hidden";
+        }
+    });
+
+    document.addEventListener("astro:after-preparation", () => {
+        const selector = document.querySelector(".dropdown");
+        if (selector) {
+            selector.style.visibility = "visible";
+        }
+    });
 </script>
