@@ -3,6 +3,8 @@ import Layout from "@/layouts/Layout.astro";
 import Hero from "@/components/seccions/Hero.astro";
 import MenuServicios from "@/components/seccions/MenuServicios.astro";
 import Info from "@/components/seccions/Info.astro";
+import Agradecimiento from "@/components/seccions/Agradecimiento.astro";
+
 import { translations } from "@/i18n/translations";
 const t = translations.es;
 ---
@@ -10,5 +12,7 @@ const t = translations.es;
 <Layout>
     <Hero translations={t} />
     <MenuServicios translations={t} />
+    <Agradecimiento translations={t} />
+
     <Info translations={t} />
 </Layout>
