@@ -5,3 +5,37 @@
     --color-secondary: #814662;
     --color-third: #fefffd;
 }
+
+/* Quitar selección de texto e imágenes en toda la web */
+* {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Permitir selección solo en inputs y textareas si las hay */
+input,
+textarea {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
+/* Evitar arrastrar imágenes */
+img {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    pointer-events: none;
+    draggable: false;
+}
+
+/* Permitir clicks en imágenes que son enlaces */
+a img {
+    pointer-events: auto;
+}

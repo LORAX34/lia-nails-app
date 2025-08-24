@@ -26,6 +26,8 @@ export interface Translation {
     titleServicio: string;
     menuseccion: MenuSection;
     info2: string;
+    gallery: string;
+    galleryDescription: string;
     titleHorario: string;
     semana1: string;
     semana2: string;

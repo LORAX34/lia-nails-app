@@ -113,42 +113,58 @@ const pathWithoutLang = currentPath.replace(/^\/(en|es)/, "") || "/";
     }
 </style>
 
-<script>
-    // Funcionalidad del dropdown
-    const languageBtn = document.getElementById("languageBtn");
-    const languageMenu = document.getElementById("languageMenu");
-    const dropdown = document.querySelector(".dropdown");
+<script is:inline>
+    function initLanguageSelector() {
+        // Funcionalidad del dropdown
+        const languageBtn = document.getElementById("languageBtn");
+        const languageMenu = document.getElementById("languageMenu");
+        const dropdown = document.querySelector(".dropdown");
 
-    if (languageBtn && languageMenu && dropdown) {
+        if (!languageBtn || !languageMenu || !dropdown) return;
+
+        // Limpiar event listeners existentes
+        const newLanguageBtn = languageBtn.cloneNode(true);
+        languageBtn.parentNode?.replaceChild(newLanguageBtn, languageBtn);
+
+        const newDropdown = dropdown.cloneNode(true);
+        dropdown.parentNode?.replaceChild(newDropdown, dropdown);
+
+        // Re-obtener elementos después de clonar
+        const btn = document.getElementById("languageBtn");
+        const menu = document.getElementById("languageMenu");
+        const dropdownEl = document.querySelector(".dropdown");
+
+        if (!btn || !menu || !dropdownEl) return;
+
         // Toggle dropdown
-        languageBtn.addEventListener("click", (e) => {
+        btn.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            dropdown.classList.toggle("open");
+            dropdownEl.classList.toggle("open");
         });
 
         // Cerrar dropdown al hacer click fuera
         document.addEventListener("click", (e) => {
-            if (!dropdown.contains(e.target as Node)) {
-                dropdown.classList.remove("open");
+            if (!dropdownEl.contains(e.target)) {
+                dropdownEl.classList.remove("open");
             }
         });
 
         // Cerrar dropdown con Escape
         document.addEventListener("keydown", (e) => {
             if (e.key === "Escape") {
-                dropdown.classList.remove("open");
+                dropdownEl.classList.remove("open");
             }
         });
 
         // Navegación con teclado
-        const dropdownItems = languageMenu.querySelectorAll("a");
+        const dropdownItems = menu.querySelectorAll("a");
         let currentIndex = -1;
 
-        languageBtn.addEventListener("keydown", (e) => {
+        btn.addEventListener("keydown", (e) => {
             if (e.key === "ArrowDown" || e.key === "ArrowUp") {
                 e.preventDefault();
-                dropdown.classList.add("open");
+                dropdownEl.classList.add("open");
 
                 if (e.key === "ArrowDown") {
                     currentIndex = 0;
@@ -178,4 +194,14 @@ const pathWithoutLang = currentPath.replace(/^\/(en|es)/, "") || "/";
             });
         });
     }
+
+    // Inicializar cuando el DOM esté listo
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initLanguageSelector);
+    } else {
+        initLanguageSelector();
+    }
+
+    // Re-inicializar después de navegación
+    document.addEventListener("astro:page-load", initLanguageSelector);
 </script>

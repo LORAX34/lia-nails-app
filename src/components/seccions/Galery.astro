@@ -1,0 +1,288 @@
+---
+import type { Translation } from "@/i18n/types";
+import CarrucelGalery from "@/components/CarrucelGalery.astro";
+
+interface Props {
+    translations: Translation;
+}
+
+const { translations: t } = Astro.props;
+
+const galleryImages = [
+    { src: "/image1.webp", alt: "Diseño de uñas 1" },
+    { src: "/image2.webp", alt: "Diseño de uñas 2" },
+    { src: "/image3.webp", alt: "Diseño de uñas 3" },
+    { src: "/image4.webp", alt: "Diseño de uñas 4" },
+    { src: "/image5.webp", alt: "Diseño de uñas 5" },
+    { src: "/image6.webp", alt: "Diseño de uñas 6" },
+    { src: "/image7.webp", alt: "Diseño de uñas 7" },
+    { src: "/image8.webp", alt: "Diseño de uñas 8" },
+    { src: "/image9.webp", alt: "Diseño de uñas 9" },
+];
+---
+
+<section class="bg-primary py-16 px-4">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-12">
+            <h2
+                class="text-secondary text-3xl md:text-4xl lg:text-5xl font-light uppercase mb-4"
+            >
+                {t.gallery || "Galería"}
+            </h2>
+            <p class="text-secondary/80 text-lg md:text-xl max-w-2xl mx-auto">
+                {
+                    t.galleryDescription ||
+                        "Descubre algunos de nuestros mejores trabajos"
+                }
+            </p>
+        </div>
+
+        <!-- Carrusel container -->
+        <div class="relative">
+            <!-- Carrusel horizontal -->
+            <div
+                id="gallery-carousel"
+                class="flex gap-6 overflow-x-auto scroll-smooth pb-4 px-2 snap-x snap-mandatory"
+                style="scrollbar-width: none; -ms-overflow-style: none;"
+            >
+                {
+                    galleryImages.map((image, index) => (
+                        <div class="flex-shrink-0 w-72 sm:w-80 md:w-72 snap-center">
+                            <CarrucelGalery src={image.src} alt={image.alt} />
+                        </div>
+                    ))
+                }
+            </div>
+
+            <!-- Puntos indicadores -->
+            <div class="flex justify-center mt-8 gap-2">
+                {
+                    galleryImages.map((_, index) => (
+                        <button
+                            class="carousel-dot w-3 h-3 rounded-full bg-secondary/30 hover:bg-secondary/60 transition-colors duration-300 touch-manipulation p-2"
+                            data-index={index}
+                            aria-label={`Ir a imagen ${index + 1}`}
+                        />
+                    ))
+                }
+            </div>
+
+            <!-- Botones de navegación (ocultos en móvil) -->
+            <button
+                id="prev-btn"
+                class="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-secondary/80 hover:bg-secondary text-primary p-3 rounded-full shadow-lg transition-all duration-300 z-10 touch-manipulation"
+                aria-label="Imagen anterior"
+            >
+                <svg
+                    class="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+
+            <button
+                id="next-btn"
+                class="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-secondary/80 hover:bg-secondary text-primary p-3 rounded-full shadow-lg transition-all duration-300 z-10 touch-manipulation"
+                aria-label="Siguiente imagen"
+            >
+                <svg
+                    class="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+</section>
+
+<script is:inline>
+    function initGalleryCarousel() {
+        const carousel = document.getElementById("gallery-carousel");
+        const dots = document.querySelectorAll(".carousel-dot");
+        const prevBtn = document.getElementById("prev-btn");
+        const nextBtn = document.getElementById("next-btn");
+
+        if (!carousel || !dots.length) return;
+
+        let currentIndex = 0;
+        let isScrolling = false;
+        let scrollTimeout;
+
+        // Calcular ancho de item dinámicamente
+        function getItemWidth() {
+            const firstItem = carousel.querySelector(".flex-shrink-0");
+            if (!firstItem) return 320;
+            const styles = window.getComputedStyle(firstItem);
+            const width = firstItem.offsetWidth;
+            const marginRight = parseInt(styles.marginRight) || 0;
+            return width + marginRight;
+        }
+
+        // Función para actualizar los puntos activos
+        function updateDots(index) {
+            dots.forEach((dot, i) => {
+                if (i === index) {
+                    dot.classList.remove("bg-secondary/30");
+                    dot.classList.add("bg-secondary", "scale-125");
+                } else {
+                    dot.classList.remove("bg-secondary", "scale-125");
+                    dot.classList.add("bg-secondary/30");
+                }
+            });
+        }
+
+        // Función para calcular el índice actual basado en scroll
+        function getCurrentIndex() {
+            const scrollLeft = carousel.scrollLeft;
+            const itemWidth = getItemWidth();
+            return Math.round(scrollLeft / itemWidth);
+        }
+
+        // Función para scroll hacia un índice específico
+        function scrollToIndex(index) {
+            if (isScrolling) return;
+
+            isScrolling = true;
+            const itemWidth = getItemWidth();
+            const scrollPosition = index * itemWidth;
+
+            carousel.scrollTo({
+                left: scrollPosition,
+                behavior: "smooth",
+            });
+
+            currentIndex = index;
+            updateDots(index);
+
+            setTimeout(() => {
+                isScrolling = false;
+            }, 500);
+        }
+
+        // Event listeners para los puntos
+        dots.forEach((dot, index) => {
+            dot.addEventListener("click", (e) => {
+                e.preventDefault();
+                scrollToIndex(index);
+            });
+        });
+
+        // Event listeners para los botones de navegación
+        if (prevBtn) {
+            prevBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                const newIndex =
+                    currentIndex > 0 ? currentIndex - 1 : dots.length - 1;
+                scrollToIndex(newIndex);
+            });
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                const newIndex =
+                    currentIndex < dots.length - 1 ? currentIndex + 1 : 0;
+                scrollToIndex(newIndex);
+            });
+        }
+
+        // Detectar scroll manual y actualizar puntos (con debounce)
+        carousel.addEventListener(
+            "scroll",
+            () => {
+                if (isScrolling) return;
+
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    const newIndex = getCurrentIndex();
+                    if (
+                        newIndex !== currentIndex &&
+                        newIndex >= 0 &&
+                        newIndex < dots.length
+                    ) {
+                        currentIndex = newIndex;
+                        updateDots(newIndex);
+                    }
+                }, 100);
+            },
+            { passive: true },
+        );
+
+        // Manejar resize de ventana
+        window.addEventListener(
+            "resize",
+            () => {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    const newIndex = getCurrentIndex();
+                    if (
+                        newIndex !== currentIndex &&
+                        newIndex >= 0 &&
+                        newIndex < dots.length
+                    ) {
+                        currentIndex = newIndex;
+                        updateDots(newIndex);
+                    }
+                }, 150);
+            },
+            { passive: true },
+        );
+
+        // Inicializar el primer punto como activo
+        updateDots(0);
+    }
+
+    // Inicializar cuando el DOM esté listo
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initGalleryCarousel);
+    } else {
+        initGalleryCarousel();
+    }
+
+    // Re-inicializar después de navegación
+    document.addEventListener("astro:page-load", initGalleryCarousel);
+</script>
+
+<style>
+    #gallery-carousel::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Smooth scrolling para Safari */
+    #gallery-carousel {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+    }
+
+    /* Animación para los puntos */
+    .carousel-dot {
+        transition: all 0.3s ease;
+    }
+
+    /* Mejoras para touch */
+    .touch-manipulation {
+        touch-action: manipulation;
+    }
+
+    /* Evitar selección de texto en botones */
+    button {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+</style>

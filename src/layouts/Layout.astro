@@ -1,7 +1,7 @@
 ---
 import "../styles/global.css";
 import { ViewTransitions } from "astro:transitions";
-
+import Analytics from "@vercel/analytics/astro";
 interface Props {
     title?: string;
     description?: string;
@@ -46,7 +46,6 @@ const siteUrl = "https://lia-nails-app.vercel.app";
         <meta property="og:site_name" content="Lia Nails" />
         <meta property="og:locale" content="es_ES" />
 
-        <!-- Twitter -->
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content={siteUrl} />
         <meta name="twitter:title" content={title} />
@@ -57,15 +56,12 @@ const siteUrl = "https://lia-nails-app.vercel.app";
             content="Lia Nails - Especialista en diseño y decoración de uñas"
         />
 
-        <!-- Additional Meta Tags -->
         <meta name="geo.region" content="ES" />
         <meta name="geo.placename" content="España" />
         <meta name="format-detection" content="telephone=no" />
 
-        <!-- Canonical URL -->
         <link rel="canonical" href={siteUrl} />
 
-        <!-- Google Site Verification -->
         <meta
             name="google-site-verification"
             content="dwyAcCwYs28NJQ8zUpoHf5lBtS49HX3fkr9QkX8XVFI"
@@ -73,6 +69,7 @@ const siteUrl = "https://lia-nails-app.vercel.app";
 
         <!-- View Transitions for smooth navigation -->
         <ViewTransitions />
+        <Analytics />
     </head>
     <body>
         <slot />

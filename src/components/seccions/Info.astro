@@ -6,6 +6,12 @@ interface Props {
 }
 
 const { translations: t } = Astro.props;
+
+// Función para formatear el número de teléfono con espacios
+function formatPhoneNumber(phone: number): string {
+    const phoneStr = phone.toString();
+    return phoneStr.replace(/(\d{3})(\d{3})(\d{3})(\d{3})/, "$1 $2 $3 $4");
+}
 ---
 
 <section class="bg-primary py-16 px-4">
@@ -86,7 +92,7 @@ const { translations: t } = Astro.props;
                     href={`tel:+${t.phone}`}
                     class="inline-block text-secondary font-semibold text-lg sm:text-xl hover:text-secondary/60 transition-colors duration-300 hover:scale-105 transform"
                 >
-                    +{t.phone}
+                    +{formatPhoneNumber(t.phone)}
                 </a>
             </div>
         </div>
