@@ -94,9 +94,9 @@ const pathWithoutLang = currentPath.replace(/^\/(en|es)/, "") || "/";
     }
 
     .dropdown.open .dropdown-menu {
-        opacity: 1 !important;
-        visibility: visible !important;
-        transform: translateY(0) !important;
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
     }
 
     /* Responsive adjustments */
@@ -115,47 +115,87 @@ const pathWithoutLang = currentPath.replace(/^\/(en|es)/, "") || "/";
 
 <script is:inline>
     function initLanguageSelector() {
+        // Funcionalidad del dropdown
         const languageBtn = document.getElementById("languageBtn");
         const languageMenu = document.getElementById("languageMenu");
         const dropdown = document.querySelector(".dropdown");
 
-        if (!languageBtn || !languageMenu || !dropdown) {
-            setTimeout(initLanguageSelector, 100);
-            return;
-        }
+        if (!languageBtn || !languageMenu || !dropdown) return;
+
+        // Limpiar event listeners existentes
+        const newLanguageBtn = languageBtn.cloneNode(true);
+        languageBtn.parentNode?.replaceChild(newLanguageBtn, languageBtn);
+
+        const newDropdown = dropdown.cloneNode(true);
+        dropdown.parentNode?.replaceChild(newDropdown, dropdown);
+
+        // Re-obtener elementos después de clonar
+        const btn = document.getElementById("languageBtn");
+        const menu = document.getElementById("languageMenu");
+        const dropdownEl = document.querySelector(".dropdown");
+
+        if (!btn || !menu || !dropdownEl) return;
 
         // Toggle dropdown
-        function toggleDropdown(e) {
+        btn.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            dropdown.classList.toggle("open");
-        }
+            dropdownEl.classList.toggle("open");
+        });
 
-        // Cerrar dropdown
-        function closeDropdown() {
-            dropdown.classList.remove("open");
-        }
-
-        // Limpiar listeners anteriores
-        languageBtn.onclick = null;
-        languageBtn.addEventListener("click", toggleDropdown);
-
-        // Cerrar al hacer click fuera
+        // Cerrar dropdown al hacer click fuera
         document.addEventListener("click", (e) => {
-            if (!dropdown.contains(e.target)) {
-                closeDropdown();
+            if (!dropdownEl.contains(e.target)) {
+                dropdownEl.classList.remove("open");
             }
         });
 
-        // Cerrar con Escape
+        // Cerrar dropdown con Escape
         document.addEventListener("keydown", (e) => {
             if (e.key === "Escape") {
-                closeDropdown();
+                dropdownEl.classList.remove("open");
             }
+        });
+
+        // Navegación con teclado
+        const dropdownItems = menu.querySelectorAll("a");
+        let currentIndex = -1;
+
+        btn.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+                e.preventDefault();
+                dropdownEl.classList.add("open");
+
+                if (e.key === "ArrowDown") {
+                    currentIndex = 0;
+                } else {
+                    currentIndex = dropdownItems.length - 1;
+                }
+
+                dropdownItems[currentIndex]?.focus();
+            }
+        });
+
+        dropdownItems.forEach((item, index) => {
+            item.addEventListener("keydown", (e) => {
+                if (e.key === "ArrowDown") {
+                    e.preventDefault();
+                    currentIndex = (index + 1) % dropdownItems.length;
+                    dropdownItems[currentIndex].focus();
+                } else if (e.key === "ArrowUp") {
+                    e.preventDefault();
+                    currentIndex =
+                        index - 1 < 0 ? dropdownItems.length - 1 : index - 1;
+                    dropdownItems[currentIndex].focus();
+                } else if (e.key === "Enter") {
+                    e.preventDefault();
+                    item.click();
+                }
+            });
         });
     }
 
-    // Inicializar
+    // Inicializar cuando el DOM esté listo
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", initLanguageSelector);
     } else {
@@ -163,7 +203,5 @@ const pathWithoutLang = currentPath.replace(/^\/(en|es)/, "") || "/";
     }
 
     // Re-inicializar después de navegación
-    document.addEventListener("astro:page-load", () => {
-        setTimeout(initLanguageSelector, 100);
-    });
+    document.addEventListener("astro:page-load", initLanguageSelector);
 </script>
