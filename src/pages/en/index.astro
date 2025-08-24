@@ -1,5 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import Hero from "@/components/seccions/Hero.astro";
 import MenuServicios from "@/components/seccions/MenuServicios.astro";
 import Info from "@/components/seccions/Info.astro";
 import { translations } from "@/i18n/translations";
@@ -7,13 +8,7 @@ const t = translations.en;
 ---
 
 <Layout>
-    <div class="bg-primary flex justify-center h-[50vh] items-center">
-        <h1
-            class="mt-4 text-secondary text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl uppercase hover:text-secondary/60 hover:scale-105 font-light transition-all duration-300 text-center px-4"
-        >
-            Lia Nails
-        </h1>
-    </div>
+    <Hero translations={t} />
     <MenuServicios translations={t} />
     <Info translations={t} />
 </Layout>
