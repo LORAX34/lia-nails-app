@@ -9,6 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@shikijs/engine-oniguruma": "^3.11.0",
     "astro": "^5.12.2"
   }
 }
