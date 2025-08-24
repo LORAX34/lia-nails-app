@@ -16,7 +16,10 @@ const { src, alt, className = "" } = Astro.props;
             src={src}
             alt={alt}
             class="w-full h-64 sm:h-72 md:h-80 lg:h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-            loading="lazy"
+            loading={className?.includes("priority") ? "eager" : "lazy"}
+            decoding="async"
+            fetchpriority={className?.includes("priority") ? "high" : "low"}
+            sizes="(max-width: 640px) 288px, (max-width: 768px) 320px, 288px"
         />
 
         <!-- Overlay con efecto hover -->

@@ -15,6 +15,10 @@ const { translations: t } = Astro.props;
             src="/hero-image.webp"
             alt="Lia Nails - Especialista en diseño de uñas"
             class="w-full h-full object-cover"
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
+            sizes="100vw"
         />
         <div
             class="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/50"
@@ -40,6 +44,10 @@ const { translations: t } = Astro.props;
                             class="w-64 h-64 md:w-80 md:h-80 lg:w-88 lg:h-88 object-cover rounded-3xl border-4 border-primary shadow-xl"
                             src="/01.webp"
                             alt="Diseño de uñas profesional"
+                            loading="eager"
+                            decoding="async"
+                            fetchpriority="high"
+                            sizes="(max-width: 768px) 256px, (max-width: 1024px) 320px, 352px"
                         />
                     </div>
 

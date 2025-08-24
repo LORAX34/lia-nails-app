@@ -48,7 +48,7 @@ const siteUrl = "https://lia-nails-app.vercel.app";
         <meta property="og:image:height" content="630" />
         <meta property="og:image:type" content="image/webp" />
         <meta property="og:site_name" content="Lia Nails" />
-        <meta property="og:locale" content="es_ES" />
+        <meta property="og:locale" content="pt_PT" />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content={siteUrl} />
@@ -60,8 +60,8 @@ const siteUrl = "https://lia-nails-app.vercel.app";
             content="Lia Nails - Especialista en diseño y decoración de uñas"
         />
 
-        <meta name="geo.region" content="ES" />
-        <meta name="geo.placename" content="España" />
+        <meta name="geo.region" content="PT" />
+        <meta name="geo.placename" content="Portugal" />
         <meta name="format-detection" content="telephone=no" />
 
         <link rel="canonical" href={siteUrl} />
@@ -71,17 +71,30 @@ const siteUrl = "https://lia-nails-app.vercel.app";
             content="dwyAcCwYs28NJQ8zUpoHf5lBtS49HX3fkr9QkX8XVFI"
         />
 
+        <!-- Preload critical images -->
+        <link
+            rel="preload"
+            as="image"
+            href="/hero-image.webp"
+            fetchpriority="high"
+        />
+        <link rel="preload" as="image" href="/01.webp" fetchpriority="high" />
+        <link
+            rel="preload"
+            as="image"
+            href="/lianails.webp"
+            fetchpriority="medium"
+        />
+
         <!-- View Transitions for smooth navigation -->
         <ViewTransitions />
 
         <!-- Prevenir FOUC durante transiciones -->
         <style is:inline>
-            /* Estilos críticos para prevenir saltos visuales */
             html {
                 visibility: visible !important;
             }
 
-            /* Mantener estilos del selector durante transiciones */
             .dropdown {
                 display: inline-block !important;
                 position: relative !important;

@@ -48,7 +48,13 @@ const galleryImages = [
                 {
                     galleryImages.map((image, index) => (
                         <div class="flex-shrink-0 w-72 sm:w-80 md:w-72 snap-center">
-                            <CarrucelGalery src={image.src} alt={image.alt} />
+                            <CarrucelGalery
+                                src={image.src}
+                                alt={image.alt}
+                                className={
+                                    index < 3 ? "priority-load" : "lazy-load"
+                                }
+                            />
                         </div>
                     ))
                 }
@@ -276,6 +282,38 @@ const galleryImages = [
     /* Mejoras para touch */
     .touch-manipulation {
         touch-action: manipulation;
+    }
+
+    /* Optimización de imágenes */
+    .priority-load img {
+        loading: eager;
+        fetchpriority: high;
+    }
+
+    .lazy-load img {
+        loading: lazy;
+        fetchpriority: low;
+    }
+
+    /* Placeholder para imágenes que cargan */
+    img[loading="lazy"] {
+        background: linear-gradient(
+            90deg,
+            #f0f0f0 25%,
+            #e0e0e0 50%,
+            #f0f0f0 75%
+        );
+        background-size: 200% 100%;
+        animation: loading 1.5s infinite;
+    }
+
+    @keyframes loading {
+        0% {
+            background-position: 200% 0;
+        }
+        100% {
+            background-position: -200% 0;
+        }
     }
 
     /* Evitar selección de texto en botones */

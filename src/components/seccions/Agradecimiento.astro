@@ -28,6 +28,9 @@ const { translations: t } = Astro.props;
                         alt="Lia trabajando en diseño de uñas"
                         class="max-w-[240px] sm:max-w-[280px] md:max-w-[320px] lg:max-w-[360px] h-auto object-contain rounded-3xl shadow-2xl border-4 border-primary/30 hover:scale-105 transform transition-all duration-500"
                         loading="lazy"
+                        decoding="async"
+                        fetchpriority="high"
+                        sizes="(max-width: 640px) 240px, (max-width: 768px) 280px, (max-width: 1024px) 320px, 360px"
                     />
                 </div>
             </div>

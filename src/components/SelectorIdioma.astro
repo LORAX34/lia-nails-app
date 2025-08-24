@@ -94,9 +94,9 @@ const pathWithoutLang = currentPath.replace(/^\/(en|es)/, "") || "/";
     }
 
     .dropdown.open .dropdown-menu {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateY(0) !important;
     }
 
     /* Responsive adjustments */
@@ -111,172 +111,59 @@ const pathWithoutLang = currentPath.replace(/^\/(en|es)/, "") || "/";
             font-size: 0.875rem;
         }
     }
-
-    /* Prevenir FOUC - estilos inline críticos */
-    .dropdown {
-        display: inline-block;
-        position: relative;
-    }
-
-    .dropdown button {
-        background-color: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(4px);
-        border: 1px solid rgb(209, 213, 219);
-        border-radius: 0.5rem;
-        padding: 0.5rem 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-weight: 500;
-        font-size: 0.875rem;
-        color: rgb(55, 65, 81);
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-
-    .dropdown-menu {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: white;
-        border: 1px solid rgb(209, 213, 219);
-        border-radius: 0.5rem;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        margin-top: 0.25rem;
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(4px);
-        transition: all 0.2s;
-        min-width: max-content;
-        overflow: hidden;
-        z-index: 50;
-    }
-
-    .dropdown-menu a {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.75rem 1rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: rgb(55, 65, 81);
-        text-decoration: none;
-        transition: all 0.15s;
-        white-space: nowrap;
-    }
-
-    .dropdown-menu a:hover {
-        background-color: rgb(249, 250, 251);
-    }
 </style>
 
 <script is:inline>
     function initLanguageSelector() {
-        // Funcionalidad del dropdown
         const languageBtn = document.getElementById("languageBtn");
         const languageMenu = document.getElementById("languageMenu");
         const dropdown = document.querySelector(".dropdown");
 
-        if (!languageBtn || !languageMenu || !dropdown) return;
-
-        // Limpiar event listeners existentes
-        const newLanguageBtn = languageBtn.cloneNode(true);
-        languageBtn.parentNode?.replaceChild(newLanguageBtn, languageBtn);
-
-        const newDropdown = dropdown.cloneNode(true);
-        dropdown.parentNode?.replaceChild(newDropdown, dropdown);
-
-        // Re-obtener elementos después de clonar
-        const btn = document.getElementById("languageBtn");
-        const menu = document.getElementById("languageMenu");
-        const dropdownEl = document.querySelector(".dropdown");
-
-        if (!btn || !menu || !dropdownEl) return;
+        if (!languageBtn || !languageMenu || !dropdown) {
+            setTimeout(initLanguageSelector, 100);
+            return;
+        }
 
         // Toggle dropdown
-        btn.addEventListener("click", (e) => {
+        function toggleDropdown(e) {
             e.preventDefault();
             e.stopPropagation();
-            dropdownEl.classList.toggle("open");
-        });
+            dropdown.classList.toggle("open");
+        }
 
-        // Cerrar dropdown al hacer click fuera
+        // Cerrar dropdown
+        function closeDropdown() {
+            dropdown.classList.remove("open");
+        }
+
+        // Limpiar listeners anteriores
+        languageBtn.onclick = null;
+        languageBtn.addEventListener("click", toggleDropdown);
+
+        // Cerrar al hacer click fuera
         document.addEventListener("click", (e) => {
-            if (!dropdownEl.contains(e.target)) {
-                dropdownEl.classList.remove("open");
+            if (!dropdown.contains(e.target)) {
+                closeDropdown();
             }
         });
 
-        // Cerrar dropdown con Escape
+        // Cerrar con Escape
         document.addEventListener("keydown", (e) => {
             if (e.key === "Escape") {
-                dropdownEl.classList.remove("open");
+                closeDropdown();
             }
-        });
-
-        // Navegación con teclado
-        const dropdownItems = menu.querySelectorAll("a");
-        let currentIndex = -1;
-
-        btn.addEventListener("keydown", (e) => {
-            if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-                e.preventDefault();
-                dropdownEl.classList.add("open");
-
-                if (e.key === "ArrowDown") {
-                    currentIndex = 0;
-                } else {
-                    currentIndex = dropdownItems.length - 1;
-                }
-
-                dropdownItems[currentIndex]?.focus();
-            }
-        });
-
-        dropdownItems.forEach((item, index) => {
-            item.addEventListener("keydown", (e) => {
-                if (e.key === "ArrowDown") {
-                    e.preventDefault();
-                    currentIndex = (index + 1) % dropdownItems.length;
-                    dropdownItems[currentIndex].focus();
-                } else if (e.key === "ArrowUp") {
-                    e.preventDefault();
-                    currentIndex =
-                        index - 1 < 0 ? dropdownItems.length - 1 : index - 1;
-                    dropdownItems[currentIndex].focus();
-                } else if (e.key === "Enter") {
-                    e.preventDefault();
-                    item.click();
-                }
-            });
         });
     }
 
-    // Inicializar cuando el DOM esté listo
+    // Inicializar
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", initLanguageSelector);
     } else {
         initLanguageSelector();
     }
 
-    // Re-inicializar después de navegación con delay para evitar FOUC
+    // Re-inicializar después de navegación
     document.addEventListener("astro:page-load", () => {
-        setTimeout(initLanguageSelector, 50);
-    });
-
-    // Prevenir FOUC aplicando estilos inmediatamente
-    document.addEventListener("astro:before-preparation", () => {
-        const selector = document.querySelector(".dropdown");
-        if (selector) {
-            selector.style.visibility = "hidden";
-        }
-    });
-
-    document.addEventListener("astro:after-preparation", () => {
-        const selector = document.querySelector(".dropdown");
-        if (selector) {
-            selector.style.visibility = "visible";
-        }
+        setTimeout(initLanguageSelector, 100);
     });
 </script>
