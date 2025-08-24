@@ -1,0 +1,86 @@
+---
+interface Props {
+    title: string;
+    services: {
+        tipo1: { name: string; price: number };
+        tipo2: { name: string; price: number };
+        tipo3: { name: string; price: number };
+        tipo4?: { name: string; price: number };
+        tipo5?: { name: string; price: number };
+    };
+}
+
+const { title, services } = Astro.props;
+---
+
+<section
+    class="bg-third rounded-3xl w-full max-w-lg h-auto flex flex-col justify-center items-center p-6 shadow-lg hover:shadow-xl transition-all duration-300"
+>
+    <h2
+        class="mb-6 text-secondary text-2xl sm:text-3xl md:text-4xl uppercase hover:text-secondary/60 font-light transition-colors duration-300 text-center"
+    >
+        {title}
+    </h2>
+
+    <ul class="w-full space-y-3">
+        <li
+            class="flex items-center p-2 hover:bg-secondary/10 rounded-lg transition-colors duration-200"
+        >
+            <span class="text-secondary font-medium">{services.tipo1.name}</span
+            >
+            <span class="flex-1 mx-3 border-b border-dotted border-secondary/30"
+            ></span>
+            <span class="text-secondary font-semibold"
+                >{services.tipo1.price}€</span
+            >
+        </li>
+        <li
+            class="flex items-center p-2 hover:bg-secondary/10 rounded-lg transition-colors duration-200"
+        >
+            <span class="text-secondary font-medium">{services.tipo2.name}</span
+            >
+            <span class="flex-1 mx-3 border-b border-dotted border-secondary/30"
+            ></span>
+            <span class="text-secondary font-semibold"
+                >{services.tipo2.price}€</span
+            >
+        </li>
+        <li
+            class="flex items-center p-2 hover:bg-secondary/10 rounded-lg transition-colors duration-200"
+        >
+            <span class="text-secondary font-medium">{services.tipo3.name}</span
+            >
+            <span class="flex-1 mx-3 border-b border-dotted border-secondary/30"
+            ></span>
+            <span class="text-secondary font-semibold"
+                >{services.tipo3.price}€</span
+            >
+        </li>
+        {
+            services.tipo4 && (
+                <li class="flex items-center p-2 hover:bg-secondary/10 rounded-lg transition-colors duration-200">
+                    <span class="text-secondary font-medium">
+                        {services.tipo4.name}
+                    </span>
+                    <span class="flex-1 mx-3 border-b border-dotted border-secondary/30" />
+                    <span class="text-secondary font-semibold">
+                        {services.tipo4.price}€
+                    </span>
+                </li>
+            )
+        }
+        {
+            services.tipo5 && (
+                <li class="flex items-center p-2 hover:bg-secondary/10 rounded-lg transition-colors duration-200">
+                    <span class="text-secondary font-medium">
+                        {services.tipo5.name}
+                    </span>
+                    <span class="flex-1 mx-3 border-b border-dotted border-secondary/30" />
+                    <span class="text-secondary font-semibold">
+                        {services.tipo5.price}€
+                    </span>
+                </li>
+            )
+        }
+    </ul>
+</section>
