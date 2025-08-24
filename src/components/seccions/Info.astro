@@ -9,57 +9,57 @@ const { translations: t } = Astro.props;
 ---
 
 <section class="bg-primary py-16 px-4">
-    <div class="max-w-6xl mx-auto space-y-16">
-        <!-- Horarios Section -->
+    <div class="max-w-4xl mx-auto">
         <div
-            class="bg-third rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 text-center"
+            class="bg-third rounded-3xl p-8 md:p-12 shadow-lg hover:shadow-xl transition-all duration-300 text-center space-y-12"
         >
-            <h2
-                class="text-secondary text-3xl sm:text-4xl md:text-5xl font-light uppercase mb-8 hover:text-secondary/60 transition-colors duration-300"
-            >
-                {t.titleHorario}
-            </h2>
+            <!-- Horarios Section -->
+            <div>
+                <h2
+                    class="text-secondary text-3xl sm:text-4xl md:text-5xl font-light uppercase mb-8 hover:text-secondary/60 transition-colors duration-300"
+                >
+                    {t.titleHorario}
+                </h2>
 
-            <div class="space-y-8">
-                <!-- Semana 1 -->
-                <div class="space-y-3">
-                    <span
-                        class="block text-secondary font-medium text-lg sm:text-xl md:text-2xl"
-                    >
-                        {t.semana1}
-                    </span>
-                    <span
-                        class="block text-secondary font-semibold text-xl sm:text-2xl md:text-3xl"
-                    >
-                        {t.horario}
-                    </span>
-                </div>
+                <div class="space-y-8">
+                    <!-- Semana 1 -->
+                    <div class="space-y-3">
+                        <span
+                            class="block text-secondary font-medium text-lg sm:text-xl md:text-2xl"
+                        >
+                            {t.semana1}
+                        </span>
+                        <span
+                            class="block text-secondary font-semibold text-xl sm:text-2xl md:text-3xl"
+                        >
+                            {t.horario}
+                        </span>
+                    </div>
 
-                <!-- Divider -->
-                <div class="border-t border-secondary/20 my-6"></div>
+                    <!-- Divider -->
+                    <div class="border-t border-secondary/20 my-6"></div>
 
-                <!-- Semana 2 -->
-                <div class="space-y-3">
-                    <span
-                        class="block text-secondary font-medium text-lg sm:text-xl md:text-2xl"
-                    >
-                        {t.semana2}
-                    </span>
-                    <span
-                        class="block text-secondary font-semibold text-xl sm:text-2xl md:text-3xl"
-                    >
-                        {t.horario}
-                    </span>
+                    <!-- Semana 2 -->
+                    <div class="space-y-3">
+                        <span
+                            class="block text-secondary font-medium text-lg sm:text-xl md:text-2xl"
+                        >
+                            {t.semana2}
+                        </span>
+                        <span
+                            class="block text-secondary font-semibold text-xl sm:text-2xl md:text-3xl"
+                        >
+                            {t.horario}
+                        </span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Info Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Ubicacion Section -->
-            <div
-                class="bg-third rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 text-center"
-            >
+            <!-- Divider principal -->
+            <div class="border-t-2 border-secondary/30"></div>
+
+            <!-- Ubicación Section -->
+            <div>
                 <h2
                     class="text-secondary text-2xl sm:text-3xl md:text-4xl font-light uppercase mb-6 hover:text-secondary/60 transition-colors duration-300"
                 >
@@ -72,10 +72,11 @@ const { translations: t } = Astro.props;
                 </span>
             </div>
 
+            <!-- Divider principal -->
+            <div class="border-t-2 border-secondary/30"></div>
+
             <!-- Contacto Section -->
-            <div
-                class="bg-third rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 text-center"
-            >
+            <div>
                 <h2
                     class="text-secondary text-2xl sm:text-3xl md:text-4xl font-light uppercase mb-6 hover:text-secondary/60 transition-colors duration-300"
                 >
@@ -83,9 +84,10 @@ const { translations: t } = Astro.props;
                 </h2>
                 <a
                     href={`tel:+${t.phone}`}
-                    class="block text-secondary font-semibold text-lg sm:text-xl hover:text-secondary/60
-                transition-colors"
-                ></a>
+                    class="inline-block text-secondary font-semibold text-lg sm:text-xl hover:text-secondary/60 transition-colors duration-300 hover:scale-105 transform"
+                >
+                    +{t.phone}
+                </a>
             </div>
         </div>
     </div>
