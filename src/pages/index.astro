@@ -6,17 +6,19 @@ import Info from "@/components/seccions/Info.astro";
 import Agradecimiento from "@/components/seccions/Agradecimiento.astro";
 import Galeria from "@/components/seccions/Galery.astro";
 import Footer from "@/components/seccions/Footer.astro";
-import "@/styles/global.css";
 
 import { translations } from "@/i18n/translations";
-const t = translations.pt;
+
+let lang = 'pt';
+$currentLang.subscribe(value => lang = value);
+const getT = () => translations[lang] || translations.pt;
 ---
 
 <Layout>
-    <Hero translations={t} />
-    <MenuServicios translations={t} />
-    <Agradecimiento translations={t} />
-    <Galeria translations={t} />
-    <Info translations={t} />
-    <Footer translations={t} />
+    <Hero translations={getT()} />
+    <MenuServicios translations={getT()} />
+    <Agradecimiento translations={getT()} />
+    <Galeria translations={getT()} />
+    <Info translations={getT()} />
+    <Footer translations={getT()} />
 </Layout>
