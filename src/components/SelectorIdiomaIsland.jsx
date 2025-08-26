@@ -12,9 +12,9 @@ function getCurrentLang(pathname) {
   if (pathname.startsWith("/es")) return "es";
   return "pt";
 }
-
 export default function SelectorIdiomaIsland() {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const pathname =
     typeof window !== "undefined" ? window.location.pathname : "/";
   const currentLang = getCurrentLang(pathname);
@@ -25,12 +25,21 @@ export default function SelectorIdiomaIsland() {
       lang.code === "pt"
         ? pathWithoutLang
         : lang.path.slice(0, -1) + pathWithoutLang;
-    window.location.href = target;
+    setLoading(true);
+    setTimeout(() => {
+      window.location.href = target;
+    }, 300);
     setOpen(false);
   };
 
   return (
     <div class="relative z-50">
+      {/* Loader overlay */}
+      {loading && (
+        <div class="fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-[9999] transition-opacity duration-200">
+          <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-primary border-solid"></div>
+        </div>
+      )}
       <div class="relative inline-block dropdown">
         <button
           class="flex items-center gap-2 px-4 py-2 bg-white bg-opacity-90 backdrop-blur-sm border border-gray-300 rounded-lg cursor-pointer transition-all duration-200 font-medium text-sm text-gray-700 shadow-sm hover:bg-opacity-100 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50"
