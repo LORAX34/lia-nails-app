@@ -22,11 +22,9 @@ const siteUrl = "https://lia-nails-app.vercel.app";
         <link rel="icon" type="image/svg+xml" href="/icon.jpg" />
         <meta name="generator" content={Astro.generator} />
 
-        <!-- Mejorar transiciones y evitar FOUC -->
         <meta name="view-transition" content="same-origin" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-        <!-- SEO Meta Tags -->
         <title>{title}</title>
         <meta name="description" content={description} />
         <meta
@@ -38,7 +36,6 @@ const siteUrl = "https://lia-nails-app.vercel.app";
         <meta name="language" content="Spanish" />
         <meta name="theme-color" content="#f0afcd" />
 
-        <!-- Open Graph / Facebook -->
         <meta property="og:type" content="website" />
         <meta property="og:url" content={siteUrl} />
         <meta property="og:title" content={title} />
@@ -71,7 +68,6 @@ const siteUrl = "https://lia-nails-app.vercel.app";
             content="dwyAcCwYs28NJQ8zUpoHf5lBtS49HX3fkr9QkX8XVFI"
         />
 
-        <!-- Preload critical images -->
         <link
             rel="preload"
             as="image"

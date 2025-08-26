@@ -12,9 +12,7 @@ export default defineConfig({
         secondary: "#814662",
         third: "#fefffd",
       },
-      fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-      },
+
       animation: {
         "bounce-slow": "bounce 2s infinite",
         "pulse-slow": "pulse 3s infinite",
