@@ -1,6 +1,6 @@
 ---
 import type { Translation } from "@/i18n/types";
-import SelectorIdioma from "@/components/svelte/SelectorIdioma.svelte";
+import SelectorIdioma from "@/components/SelectorIdioma.astro";
 
 interface Props {
     translations: Translation;
@@ -27,7 +27,7 @@ const { translations: t } = Astro.props;
 
         <!-- Selector de idiomas en la imagen (Svelte) -->
         <div class="absolute top-6 left-6 z-50">
-            <SelectorIdioma client:only="svelte" />
+            <SelectorIdioma  />
         </div>
     </div>
 
