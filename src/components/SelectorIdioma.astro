@@ -1,5 +1,4 @@
 ---
-// Obtener el idioma actual de la URL
 const currentPath = Astro.url.pathname;
 const currentLang = currentPath.startsWith("/en")
     ? "en"
@@ -202,6 +201,5 @@ const pathWithoutLang = currentPath.replace(/^\/(en|es)/, "") || "/";
         initLanguageSelector();
     }
 
-    // Re-inicializar después de navegación
     document.addEventListener("astro:page-load", initLanguageSelector);
 </script>
