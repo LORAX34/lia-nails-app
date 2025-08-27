@@ -6,12 +6,15 @@ import Info from "@/components/seccions/Info.astro";
 import Agradecimiento from "@/components/seccions/Agradecimiento.astro";
 import Galeria from "@/components/seccions/Galery.astro";
 import Footer from "@/components/seccions/Footer.astro";
+
 import { translations } from "@/i18n/translations";
 const t = translations.en;
 ---
 
 <Layout>
-    <Hero translations={t} />
+    <div class="animate-blurred-fade-in animate-delay-200">
+        <Hero translations={t} />
+    </div>
     <MenuServicios translations={t} />
     <Agradecimiento translations={t} />
     <Galeria translations={t} />

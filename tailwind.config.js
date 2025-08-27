@@ -1,5 +1,4 @@
 import { defineConfig } from "@tailwindcss/vite";
-
 export default defineConfig({
   content: [
     "./src/**/*.{astro,js,ts,jsx,tsx,vue,svelte}",
