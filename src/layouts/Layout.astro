@@ -9,7 +9,11 @@ interface Props {
     description?: string;
 }
 
-const { title , description } = Astro.props;
+const {
+    title = "Lia Nails",
+    description = "Lia Nails - Profissional de unhas com mais de 10 anos de experiencia",
+} = Astro.props;
+
 const siteUrl = "https://lia-nails-app.vercel.app";
 ---
 
