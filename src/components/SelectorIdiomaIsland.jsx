@@ -28,7 +28,7 @@ export default function SelectorIdiomaIsland() {
     setLoading(true);
     setTimeout(() => {
       window.location.href = target;
-    }, 300);
+    }, 600);
     setOpen(false);
   };
 

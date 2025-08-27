@@ -11,6 +11,11 @@ import { translations } from "@/i18n/translations";
 const t = translations.es;
 ---
 
+<head>
+    <link rel="preload" as="image" href="https://res.cloudinary.com/dfsttrid3/image/upload/v1756295664/hero-image_nxib0k.webp" fetchpriority="high" />
+    <link rel="preload" as="image" href="https://res.cloudinary.com/dfsttrid3/image/upload/v1756295664/01_yp4nyr.webp" fetchpriority="high" />
+    <link rel="preload" as="image" href="https://res.cloudinary.com/dfsttrid3/image/upload/v1756295664/lianails_tkpwso.webp" fetchpriority="high" />
+</head>
 <Layout title={t.title} description={t.description}>
     <div class="animate-blurred-fade-in animate-delay-100">
         <Hero translations={t} />

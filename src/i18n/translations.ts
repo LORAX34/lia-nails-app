@@ -2,6 +2,12 @@ import type { Translations } from "./types";
 
 export const translations: Translations = {
   pt: {
+    notFoundTitle: "Página não encontrada",
+    notFoundDescription: "A página que procura não existe.",
+    notFoundOops: "Ops!",
+    notFoundText:
+      "A página que procura não existe ou foi movida.\nPode voltar ao início ou explorar nossos serviços.",
+    notFoundButton: "Ir para o início",
     title: "Lia Nails",
     description:
       "Lia Nails - Profissional de unhas com mais de 10 anos de experiencia",
@@ -108,6 +114,12 @@ export const translations: Translations = {
     direccion: "Rua de Santo Antonio 115, Faro, Portugal",
   },
   en: {
+    notFoundTitle: "Page not found",
+    notFoundDescription: "The page you are looking for does not exist.",
+    notFoundOops: "Oops!",
+    notFoundText:
+      "The page you are looking for does not exist or was moved.\nYou can return to the homepage or explore our services.",
+    notFoundButton: "Go to homepage",
     title: "Lia Nails",
     description:
       "Lia Nails - Professional nail artist with over 10 years of experience",
@@ -214,6 +226,12 @@ export const translations: Translations = {
     direccion: "Rua de Santo Antonio 115, Faro, Portugal",
   },
   es: {
+    notFoundTitle: "Página no encontrada",
+    notFoundDescription: "La página que buscas no existe.",
+    notFoundOops: "¡Ups!",
+    notFoundText:
+      "La página que buscas no existe o fue movida.\nPuedes volver al inicio o explorar nuestros servicios.",
+    notFoundButton: "Ir al inicio",
     title: "Lia Nails",
     description:
       "Lia Nails - Profesional de uñas con más de 10 años de experiencia",

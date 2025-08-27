@@ -38,6 +38,11 @@ export interface Translation {
   titleContacto: string;
   phone: number;
   direccion: string;
+  notFoundTitle: string;
+  notFoundDescription: string;
+  notFoundOops: string;
+  notFoundText: string;
+  notFoundButton: string;
 }
 
 export interface Translations {
