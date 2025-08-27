@@ -9,7 +9,7 @@ interface Props {
     description?: string;
 }
 
-const { title , description } = Astro.props;  
+const { title , description } = Astro.props;
 const siteUrl = "https://lia-nails-app.vercel.app";
 ---
 
@@ -39,7 +39,7 @@ const siteUrl = "https://lia-nails-app.vercel.app";
         <meta property="og:url" content={siteUrl} />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
-        <meta property="og:image" content={`${siteUrl}/hero-image.webp`} />
+        <meta property="og:image" content={`https://res.cloudinary.com/dfsttrid3/image/upload/v1756295664/hero-image_nxib0k.webp`} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:type" content="image/webp" />
@@ -50,7 +50,7 @@ const siteUrl = "https://lia-nails-app.vercel.app";
         <meta name="twitter:url" content={siteUrl} />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={`${siteUrl}/hero-image.webp`} />
+        <meta name="twitter:image" content={`https://res.cloudinary.com/dfsttrid3/image/upload/v1756295664/hero-image_nxib0k.webp`} />
         <meta
             name="twitter:image:alt"
             content="Lia Nails - Especialista en diseño y decoración de uñas"
@@ -68,12 +68,13 @@ const siteUrl = "https://lia-nails-app.vercel.app";
         />
 
         <link
+        
             rel="preload"
             as="image"
             href="https://res.cloudinary.com/dfsttrid3/image/upload/v1756295664/hero-image_nxib0k.webp"
             fetchpriority="high"
         />
-        <link rel="preload" as="image" href="https://res.cloudinary.com/dfsttrid3/image/upload/v1756295664/01_yp4nyr.webp" fetchpriority="high" />
+        <link rel="preload" as= "image" href="https://res.cloudinary.com/dfsttrid3/image/upload/v1756295664/01_yp4nyr.webp" fetchpriority="high" />
         <link
             rel="preload"
             as="image"
