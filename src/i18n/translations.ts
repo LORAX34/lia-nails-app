@@ -2,6 +2,9 @@ import type { Translations } from "./types";
 
 export const translations: Translations = {
   pt: {
+    title: "Lia Nails",
+    description:
+      "Lia Nails - Profissional de unhas com mais de 10 anos de experiencia",
     info1:
       "Bem-vinda ao meu pequeno universo dedicado à arte e saúde das unhas.",
     textButton: "Marcar Hora",
@@ -105,6 +108,9 @@ export const translations: Translations = {
     direccion: "Rua de Santo Antonio 115, Faro, Portugal",
   },
   en: {
+    title: "Lia Nails",
+    description:
+      "Lia Nails - Professional nail artist with over 10 years of experience",
     info1:
       "Welcome to my little universe dedicated to the art and care of your nails.",
     textButton: "Book Appointment",
@@ -208,6 +214,9 @@ export const translations: Translations = {
     direccion: "Rua de Santo Antonio 115, Faro, Portugal",
   },
   es: {
+    title: "Lia Nails",
+    description:
+      "Lia Nails - Profesional de uñas con más de 10 años de experiencia",
     info1:
       "Bienvenidas a mi pequeño universo dedicado al arte y la salud de tus uñas.",
     textButton: "Reservar Cita",
