@@ -37,7 +37,7 @@ export default function SelectorIdiomaIsland() {
       {/* Loader overlay */}
       {loading && (
         <div class="fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-[9999] transition-opacity duration-200">
-          <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-primary border-solid"></div>
+          <div class="animate-rotate-180 rounded-full h-16 w-16 border-t-4 border-primary border-solid"></div>
         </div>
       )}
       <div class="relative inline-block dropdown">
@@ -55,7 +55,7 @@ export default function SelectorIdiomaIsland() {
             </span>
           </span>
           <svg
-            class={`w-3 h-2 transition-transform duration-200 text-gray-500 chevron${
+            class={`w-3 h-2 transition-transform duration-200 text-gray-500 chevron transform${
               open ? " rotate-180" : ""
             }`}
             viewBox="0 0 12 8"
