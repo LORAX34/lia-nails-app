@@ -12,7 +12,8 @@ export const translations: Translations = {
     description:
       "Lia Nails - Profissional de unhas com mais de 10 anos de experiencia",
     info1:
-      "Bem-vinda ao meu pequeno universo dedicado à arte e saúde das unhas.",
+      "Trabalho com gel, acrílico e fibra de vidrio para conseguir a
+ manicura perfeita para si",
     textButton: "Marcar Hora",
     titleServicio: "Meus serviços",
     menuseccion: {
@@ -124,7 +125,7 @@ export const translations: Translations = {
     description:
       "Lia Nails - Professional nail artist with over 10 years of experience",
     info1:
-      "Welcome to my little universe dedicated to the art and care of your nails.",
+      "I work with gel, acrylic, and fiberglass to achieve the perfect manicure for you.",
     textButton: "Book Appointment",
     titleServicio: "My Services",
     menuseccion: {
@@ -236,7 +237,7 @@ export const translations: Translations = {
     description:
       "Lia Nails - Profesional de uñas con más de 10 años de experiencia",
     info1:
-      "Bienvenidas a mi pequeño universo dedicado al arte y la salud de tus uñas.",
+      "Trabajo con gel, acrílico y fibra de vidrio para conseguir la manicura perfecta para ti.",
     textButton: "Reservar Cita",
     titleServicio: "Mis Servicios",
     menuseccion: {
