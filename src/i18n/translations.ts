@@ -12,8 +12,7 @@ export const translations: Translations = {
     description:
       "Lia Nails - Profissional de unhas com mais de 10 anos de experiencia",
     info1:
-      "Trabalho com gel, acrílico e fibra de vidrio para conseguir a
- manicura perfeita para si",
+      "Trabalho com gel, acrílico e fibra de vidrio para conseguir a manicura perfeita para si",
     textButton: "Marcar Hora",
     titleServicio: "Meus serviços",
     menuseccion: {
