@@ -1,6 +1,7 @@
 ---
 import type { Translation } from "@/i18n/types";
 import CarrucelGalery from "@/components/CarrucelGalery.astro";
+import { getPreviewImages } from "@/data/galleryImages";
 
 interface Props {
     translations: Translation;
@@ -8,48 +9,18 @@ interface Props {
 
 const { translations: t } = Astro.props;
 
-const galleryImages = [
-    { src: "/image1.webp", alt: "Diseño de uñas 1" },
-    { src: "/image2.webp", alt: "Diseño de uñas 2" },
-    { src: "/image3.webp", alt: "Diseño de uñas 3" },
-    { src: "/image4.webp", alt: "Diseño de uñas 4" },
-    {
-        src: "https://res.cloudinary.com/dfsttrid3/image/upload/v1756295660/image5_cdtijz.webp",
-        alt: "Diseño de uñas 5",
-    },
-    {
-        src: "https://res.cloudinary.com/dfsttrid3/image/upload/v1756295661/image6_szqwzi.webp",
-        alt: "Diseño de uñas 6",
-    },
-    {
-        src: "https://res.cloudinary.com/dfsttrid3/image/upload/v1756295662/image7_wi2kyf.webp",
-        alt: "Diseño de uñas 7",
-    },
-    {
-        src: "https://res.cloudinary.com/dfsttrid3/image/upload/v1756295675/image8_bmc23o.webp",
-        alt: "Diseño de uñas 8",
-    },
-    {
-        src: "https://res.cloudinary.com/dfsttrid3/image/upload/v1756295662/image9_dexkcb.webp",
-        alt: "Diseño de uñas 9",
-    },
-    {
-        src: "https://res.cloudinary.com/dfsttrid3/image/upload/v1757110533/20250904_191953_t2it6v.webp",
-        alt: "Diseño de uñas 10",
-    },
-    {
-        src: "https://res.cloudinary.com/dfsttrid3/image/upload/v1757110535/20250901_194059_yoffwy.webp",
-        alt: "Diseño de uñas 11",
-    },
-    {
-        src: "https://res.cloudinary.com/dfsttrid3/image/upload/v1757110538/20250829_163011_d8xec0.webp",
-        alt: "Diseño de uñas 12",
-    },
-    {
-        src: "https://res.cloudinary.com/dfsttrid3/image/upload/v1757110535/20250827_191919_t3oamr.webp",
-        alt: "Diseño de uñas 13",
-    },
-];
+// Obtener solo las primeras 5 imágenes
+const previewImages = getPreviewImages(5);
+
+// Función para obtener la URL de la galería completa según el idioma actual
+function getGalleryUrl() {
+    const pathname = Astro.url.pathname;
+    if (pathname.startsWith("/en")) return "/en/galeria";
+    if (pathname.startsWith("/es")) return "/es/galeria";
+    return "/galeria";
+}
+
+const galleryUrl = getGalleryUrl();
 ---
 
 <section class="bg-primary py-16 px-4">
@@ -65,8 +36,8 @@ const galleryImages = [
             </p>
         </div>
 
-        <!-- Carrusel container -->
-        <div class="relative">
+        <!-- Preview Gallery - Solo primeras 5 imágenes -->
+        <div class="relative mb-12">
             <!-- Carrusel horizontal -->
             <div
                 id="gallery-carousel"
@@ -74,7 +45,7 @@ const galleryImages = [
                 style="scrollbar-width: none; -ms-overflow-style: none;"
             >
                 {
-                    galleryImages.map((image, index) => (
+                    previewImages.map((image, index) => (
                         <div class="flex-shrink-0 w-72 sm:w-80 md:w-72 snap-center">
                             <CarrucelGalery
                                 src={image.src}
@@ -91,7 +62,7 @@ const galleryImages = [
             <!-- Puntos indicadores -->
             <div class="flex justify-center mt-8 gap-2">
                 {
-                    galleryImages.map((_, index) => (
+                    previewImages.map((_, index) => (
                         <button
                             class="carousel-dot w-3 h-3 rounded-full bg-secondary/30 hover:bg-secondary/60 transition-colors duration-300 touch-manipulation p-2"
                             data-index={index}
@@ -140,15 +111,51 @@ const galleryImages = [
                 </svg>
             </button>
         </div>
+
+        <!-- Botón para ver toda la galería -->
+        <div class="text-center">
+            <button
+                id="view-all-btn"
+                class="inline-flex items-center gap-3 bg-secondary text-third px-8 py-4 rounded-full font-semibold text-lg hover:bg-secondary/90 hover:scale-105 transform transition-all duration-300 shadow-lg hover:shadow-xl group"
+            >
+                <svg
+                    class="w-6 h-6 group-hover:rotate-12 transition-transform duration-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                    ></path>
+                </svg>
+                {t.viewAllGallery}
+                <svg
+                    class="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                </svg>
+            </button>
+        </div>
     </div>
 </section>
 
-<script is:inline>
+<script is:inline define:vars={{ galleryUrl }}>
     function initGalleryCarousel() {
         const carousel = document.getElementById("gallery-carousel");
         const dots = document.querySelectorAll(".carousel-dot");
         const prevBtn = document.getElementById("prev-btn");
         const nextBtn = document.getElementById("next-btn");
+        const viewAllBtn = document.getElementById("view-all-btn");
 
         if (!carousel || !dots.length) return;
 
@@ -231,6 +238,16 @@ const galleryImages = [
                 const newIndex =
                     currentIndex < dots.length - 1 ? currentIndex + 1 : 0;
                 scrollToIndex(newIndex);
+            });
+        }
+
+        // Event listener para el botón "Ver todos"
+        if (viewAllBtn) {
+            viewAllBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+
+                // Navegar a la galería completa en la misma ventana
+                window.location.href = galleryUrl;
             });
         }
 
@@ -350,5 +367,22 @@ const galleryImages = [
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
+    }
+
+    /* Animaciones para el botón de ver todos */
+    #view-all-btn {
+        background: linear-gradient(135deg, #814662 0%, #9d5a7a 100%);
+        border: none;
+        outline: none;
+        cursor: pointer;
+    }
+
+    #view-all-btn:hover {
+        background: linear-gradient(135deg, #9d5a7a 0%, #b16d92 100%);
+        box-shadow: 0 10px 25px rgba(129, 70, 98, 0.3);
+    }
+
+    #view-all-btn:active {
+        transform: scale(0.98);
     }
 </style>

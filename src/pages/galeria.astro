@@ -1,0 +1,20 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import PinterestGallery from "@/components/PinterestGallery.astro";
+import { getAllImages } from "@/data/galleryImages";
+import { translations } from "@/i18n/translations";
+
+const t = translations.pt;
+const allImages = getAllImages();
+---
+
+<Layout
+    title={`${t.myWorks} - ${t.title}`}
+    description={`${t.galleryDescription} - ${t.title}`}
+>
+    <PinterestGallery
+        images={allImages}
+        title={t.myWorks}
+        closeText={t.closeButton}
+    />
+</Layout>
