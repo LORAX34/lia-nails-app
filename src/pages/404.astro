@@ -16,7 +16,6 @@ function getValidLang(pathname: string): Language {
     return "pt";
 }
 
-// Función para detectar idioma desde el referer (página anterior)
 function detectLangFromReferer(
     referer: string | null,
     origin: string,
@@ -27,7 +26,6 @@ function detectLangFromReferer(
     return getValidLang(refererPath);
 }
 
-// Detectar idioma - prioriza el pathname actual, sino usa el referer
 let lang: Language = getValidLang(pathname);
 if (
     pathname === "/404" ||
@@ -41,7 +39,6 @@ if (
 const t = translations[lang];
 const homeURL = lang === "en" ? "/en/" : lang === "es" ? "/es/" : "/";
 
-// Función para volver atrás con validación
 const goBack = `
     if (window.history.length > 1) {
         window.history.back();
