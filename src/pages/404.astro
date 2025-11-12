@@ -2,6 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import { translations } from "@/i18n/translations";
 import type { Translations } from "@/i18n/types";
+export const prerender = false;
 
 const pathname = Astro.url.pathname;
 const referer = Astro.request.headers.get("referer");

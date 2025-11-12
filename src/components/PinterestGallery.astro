@@ -1,0 +1,527 @@
+---
+import type { GalleryImage } from "@/data/galleryImages";
+
+interface Props {
+    images: GalleryImage[];
+    title: string;
+    closeText?: string;
+}
+
+const { images, title, closeText = "Cerrar" } = Astro.props;
+---
+
+<div class="min-h-screen bg-third">
+    <!-- Header -->
+    <div class="bg-primary shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl md:text-3xl lg:text-4xl font-light text-secondary uppercase tracking-wide">
+                    {title}
+                </h1>
+                <button
+                    id="back-button"
+                    class="flex items-center gap-2 px-4 py-2 bg-secondary text-third rounded-lg hover:bg-secondary/80 transition-colors duration-300 text-sm font-medium"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    {closeText}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery Container -->
+    <div class="max-w-7xl mx-auto px-2 md:px-4 py-8">
+        <!-- Pinterest Style Gallery -->
+        <div id="pinterest-gallery" class="columns-2 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-2 md:gap-4 space-y-2 md:space-y-4">
+            {images.map((image, index) => (
+                <div
+                    class="break-inside-avoid mb-2 md:mb-4 group cursor-pointer"
+                    data-index={index}
+                >
+                    <div class="relative overflow-hidden rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 bg-white">
+                        <img
+                            src={image.src}
+                            alt={image.alt}
+                            class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500"
+                            loading={index < 10 ? "eager" : "lazy"}
+                            decoding="async"
+                            fetchpriority={index < 10 ? "high" : "low"}
+                            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
+                        />
+
+                        <!-- Overlay con efecto hover -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="absolute bottom-2 md:bottom-4 left-2 md:left-4 right-2 md:right-4">
+                                <p class="text-white text-xs md:text-sm font-medium drop-shadow-lg">
+                                    {image.alt}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Efecto de brillo -->
+                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700">
+                        </div>
+                    </div>
+                </div>
+            ))}
+        </div>
+
+        <!-- Loading indicator para lazy loading -->
+        <div id="loading-indicator" class="hidden text-center py-8">
+            <div class="inline-flex items-center gap-3">
+                <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-primary"></div>
+                <span class="text-secondary font-medium">Cargando más imágenes...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para vista ampliada -->
+    <div id="image-modal" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 hidden items-center justify-center p-4 md:p-8">
+        <div class="relative w-full h-full max-w-7xl max-h-full flex items-center justify-center">
+            <!-- Botón cerrar -->
+            <button
+                id="close-modal"
+                class="absolute top-2 right-2 md:top-4 md:right-4 bg-primary/90 hover:bg-primary text-secondary p-2 md:p-3 rounded-full transition-all duration-300 z-20 shadow-lg"
+            >
+                <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+
+            <!-- Imagen ampliada -->
+            <img
+                id="modal-image"
+                src=""
+                alt=""
+                class="max-w-[90%] max-h-[80%] md:max-w-full md:max-h-[85%] object-contain rounded-lg shadow-2xl mx-auto"
+            />
+
+            <!-- Navegación -->
+            <button
+                id="prev-image"
+                class="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-primary/90 hover:bg-primary text-secondary p-2 md:p-3 rounded-full transition-all duration-300 z-10 shadow-lg"
+            >
+                <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+
+            <button
+                id="next-image"
+                class="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-primary/90 hover:bg-primary text-secondary p-2 md:p-3 rounded-full transition-all duration-300 z-10 shadow-lg"
+            >
+                <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
+
+            <!-- Contador de imágenes -->
+            <div class="absolute bottom-2 md:bottom-4 left-1/2 -translate-x-1/2 bg-primary/90 text-secondary px-3 py-2 md:px-4 rounded-full text-sm font-medium z-10 shadow-lg">
+                <span id="current-image-number">1</span> / <span id="total-images">{images.length}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script is:inline>
+    function initPinterestGallery() {
+        const galleryItems = document.querySelectorAll('[data-index]');
+        const modal = document.getElementById('image-modal');
+        const modalImage = document.getElementById('modal-image');
+        const closeModal = document.getElementById('close-modal');
+        const backButton = document.getElementById('back-button');
+        const prevBtn = document.getElementById('prev-image');
+        const nextBtn = document.getElementById('next-image');
+        const currentNumberSpan = document.getElementById('current-image-number');
+        const totalImagesSpan = document.getElementById('total-images');
+
+        let currentIndex = 0;
+        const images = Array.from(galleryItems).map(item => {
+            const img = item.querySelector('img');
+            return {
+                src: img.src,
+                alt: img.alt
+            };
+        });
+
+        function openModal(index) {
+            currentIndex = index;
+            modalImage.src = images[index].src;
+            modalImage.alt = images[index].alt;
+            currentNumberSpan.textContent = index + 1;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+
+            // Resetear transform y posicionamiento
+            modalImage.style.transform = '';
+            modalImage.style.width = '';
+            modalImage.style.height = '';
+
+            // Centrar imagen después de que cargue
+            modalImage.onload = function() {
+                centerImage();
+            };
+        }
+
+        function closeModalFunc() {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+
+        function centerImage() {
+            if (!modalImage.complete) return;
+
+            const container = modal.querySelector('.relative');
+            const containerRect = container.getBoundingClientRect();
+            const imgRect = modalImage.getBoundingClientRect();
+
+            // Calcular el espacio disponible considerando los botones
+            const availableWidth = containerRect.width - 80; // 40px cada lado para botones
+            const availableHeight = containerRect.height - 120; // espacio para contador y botón cerrar
+
+            const imgNaturalRatio = modalImage.naturalWidth / modalImage.naturalHeight;
+            const containerRatio = availableWidth / availableHeight;
+
+            let newWidth, newHeight;
+
+            if (imgNaturalRatio > containerRatio) {
+                // Imagen más ancha que el contenedor
+                newWidth = Math.min(modalImage.naturalWidth, availableWidth);
+                newHeight = newWidth / imgNaturalRatio;
+            } else {
+                // Imagen más alta que el contenedor
+                newHeight = Math.min(modalImage.naturalHeight, availableHeight);
+                newWidth = newHeight * imgNaturalRatio;
+            }
+
+            // Aplicar dimensiones máximas para pantallas pequeñas
+            if (window.innerWidth < 768) {
+                const maxWidth = window.innerWidth - 32;
+                const maxHeight = window.innerHeight - 160;
+
+                if (newWidth > maxWidth) {
+                    newWidth = maxWidth;
+                    newHeight = newWidth / imgNaturalRatio;
+                }
+
+                if (newHeight > maxHeight) {
+                    newHeight = maxHeight;
+                    newWidth = newHeight * imgNaturalRatio;
+                }
+            }
+        }
+
+        function showPrevImage() {
+            currentIndex = currentIndex > 0 ? currentIndex - 1 : images.length - 1;
+            modalImage.src = images[currentIndex].src;
+            modalImage.alt = images[currentIndex].alt;
+            currentNumberSpan.textContent = currentIndex + 1;
+            modalImage.onload = function() {
+                centerImage();
+            };
+        }
+
+        function showNextImage() {
+            currentIndex = currentIndex < images.length - 1 ? currentIndex + 1 : 0;
+            modalImage.src = images[currentIndex].src;
+            modalImage.alt = images[currentIndex].alt;
+            currentNumberSpan.textContent = currentIndex + 1;
+            modalImage.onload = function() {
+                centerImage();
+            };
+        }
+
+        // Event listeners para abrir modal
+        galleryItems.forEach((item, index) => {
+            item.addEventListener('click', () => openModal(index));
+        });
+
+        // Event listeners para modal
+        if (closeModal) closeModal.addEventListener('click', closeModalFunc);
+        if (prevBtn) prevBtn.addEventListener('click', showPrevImage);
+        if (nextBtn) nextBtn.addEventListener('click', showNextImage);
+
+        // Event listener para botón volver
+        if (backButton) {
+            backButton.addEventListener('click', () => {
+                if (window.history.length > 1) {
+                    window.history.back();
+                } else {
+                    // Fallback - ir a home según idioma
+                    const pathname = window.location.pathname;
+                    if (pathname.includes('/en/')) {
+                        window.location.href = '/en/';
+                    } else if (pathname.includes('/es/')) {
+                        window.location.href = '/es/';
+                    } else {
+                        window.location.href = '/';
+                    }
+                }
+            });
+        }
+
+        // Cerrar modal con ESC o click en fondo
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModalFunc();
+            if (e.key === 'ArrowLeft') showPrevImage();
+            if (e.key === 'ArrowRight') showNextImage();
+        });
+
+        modal?.addEventListener('click', (e) => {
+            if (e.target === modal) closeModalFunc();
+        });
+
+        // Optimización de columnas según viewport
+        function adjustColumns() {
+            const gallery = document.getElementById('pinterest-gallery');
+            const width = window.innerWidth;
+
+            if (width < 640) {
+                gallery.className = gallery.className.replace(/columns-\d+/, 'columns-2');
+                // Ajustar gap para móvil
+                gallery.style.columnGap = '0.5rem';
+                gallery.style.gap = '0.5rem';
+            }
+            else if (width < 768) {
+                gallery.className = gallery.className.replace(/columns-\d+/, 'columns-2');
+                gallery.style.columnGap = '1rem';
+                gallery.style.gap = '1rem';
+            }
+            else if (width < 1024) {
+                gallery.className = gallery.className.replace(/columns-\d+/, 'columns-3');
+                gallery.style.columnGap = '1rem';
+                gallery.style.gap = '1rem';
+            }
+            else if (width < 1280) {
+                gallery.className = gallery.className.replace(/columns-\d+/, 'columns-4');
+                gallery.style.columnGap = '1rem';
+                gallery.style.gap = '1rem';
+            }
+            else {
+                gallery.className = gallery.className.replace(/columns-\d+/, 'columns-5');
+                gallery.style.columnGap = '1rem';
+                gallery.style.gap = '1rem';
+            }
+        }
+
+        // Lazy loading mejorado
+        function setupLazyLoading() {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.classList.add('animate-fade-in');
+                        observer.unobserve(img);
+                    }
+                });
+            }, {
+                rootMargin: '50px'
+            });
+
+            const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+            lazyImages.forEach(img => imageObserver.observe(img));
+        }
+
+        // Inicializar todo
+        adjustColumns();
+        setupLazyLoading();
+
+        // Ajustar columnas en resize
+        window.addEventListener('resize', adjustColumns);
+    }
+
+    // Inicializar cuando el DOM esté listo
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initPinterestGallery);
+    } else {
+        initPinterestGallery();
+    }
+</script>
+
+<style>
+    /* Animaciones personalizadas */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.6s ease-out forwards;
+    }
+
+    /* Mejoras para las columnas */
+    #pinterest-gallery img {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Evitar breaks incorrectos en las columnas */
+    #pinterest-gallery > div {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        display: block;
+        width: 100%;
+    }
+
+    /* Mejorar distribución en columnas móviles */
+    @media (max-width: 640px) {
+        #pinterest-gallery {
+            column-fill: balance;
+        }
+
+        #pinterest-gallery > div {
+            display: inline-block;
+            width: 100%;
+            vertical-align: top;
+        }
+    }
+
+    /* Scrollbar personalizado */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #f0afcd;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #814662;
+    }
+
+    /* Optimizaciones de rendimiento */
+    #pinterest-gallery {
+        contain: layout style;
+    }
+
+    /* Placeholder para imágenes que cargan */
+    img[loading="lazy"] {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: loading 1.5s infinite;
+    }
+
+    @keyframes loading {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+
+    /* Evitar selección de texto */
+    .pinterest-gallery * {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    /* Modal responsivo */
+    @media (max-width: 768px) {
+        #image-modal {
+            padding: 1rem;
+        }
+
+        #modal-image {
+            max-width: calc(100vw - 4rem);
+            max-height: calc(100vh - 8rem);
+        }
+
+        .absolute.bottom-2 {
+            bottom: 1rem;
+        }
+
+        /* Ajustar gap en móvil para 2 columnas */
+        #pinterest-gallery {
+            gap: 0.5rem;
+            column-gap: 0.5rem;
+        }
+
+        /* Optimizar imágenes en 2 columnas móvil */
+        #pinterest-gallery img {
+            border-radius: 0.75rem;
+        }
+
+        /* Mejor espaciado entre elementos */
+        #pinterest-gallery > div {
+            margin-bottom: 0.5rem;
+        }
+    }
+
+    /* Ajustes para pantallas muy pequeñas */
+    @media (max-width: 400px) {
+        #pinterest-gallery {
+            gap: 0.25rem;
+            column-gap: 0.25rem;
+        }
+
+        .max-w-7xl {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+
+        /* Imágenes más pequeñas en pantallas muy pequeñas */
+        #pinterest-gallery img {
+            border-radius: 0.5rem;
+        }
+
+        /* Texto más pequeño en overlay */
+        #pinterest-gallery .absolute p {
+            font-size: 0.75rem;
+            line-height: 1rem;
+        }
+    }
+
+    /* Mejoras específicas para 2 columnas móvil */
+    @media (min-width: 320px) and (max-width: 639px) {
+        #pinterest-gallery {
+            columns: 2;
+            column-gap: 0.5rem;
+            orphans: 1;
+            widows: 1;
+        }
+
+        /* Asegurar que las imágenes mantengan proporciones naturales */
+        #pinterest-gallery img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Mejorar hover en móvil (touch) */
+        #pinterest-gallery .group:active .group-hover\:scale-105 {
+            transform: scale(1.02);
+        }
+
+        #pinterest-gallery .group:active .opacity-0 {
+            opacity: 1;
+        }
+    }
+
+    /* Mejoras visuales del modal */
+    #image-modal {
+        backdrop-filter: blur(4px);
+    }
+
+    #modal-image {
+        filter: drop-shadow(0 20px 25px rgb(0 0 0 / 0.25));
+    }
+
+    /* Botones del modal con mejor contraste */
+    #close-modal, #prev-image, #next-image {
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(240, 175, 205, 0.3);
+    }
+
+    #close-modal:hover, #prev-image:hover, #next-image:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 16px rgba(240, 175, 205, 0.3);
+    }
+</style>

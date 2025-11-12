@@ -30,6 +30,9 @@ export interface Translation {
   info2: string;
   gallery: string;
   galleryDescription: string;
+  viewAllGallery: string;
+  myWorks: string;
+  closeButton: string;
   titleHorario: string;
   semana1: string;
   semana2: string;
