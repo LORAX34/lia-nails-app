@@ -8,6 +8,52 @@ interface Props {
 }
 
 const { images, title, closeText = "Cerrar" } = Astro.props;
+
+// DIAGNÓSTICO EXTREMO
+console.log('=== DIAGNÓSTICO PINTEREST GALLERY ===');
+console.log('1. Astro.props:', Astro.props);
+console.log('2. Prop images:', images);
+console.log('3. Tipo de images:', typeof images);
+console.log('4. Es array?:', Array.isArray(images));
+console.log('5. Keys del objeto:', images ? Object.keys(images) : 'no images');
+
+// Si es el objeto de request, vamos a extraer las props manualmente
+let finalImages = [];
+let finalTitle = title;
+let finalCloseText = closeText;
+
+// Verificar si es el objeto de request (tiene propiedades como url, method, etc.)
+if (images && typeof images === 'object' && images.url && images.method) {
+    console.log('⚠️ DETECTADO: Es objeto de request HTTP');
+    console.log('🔍 URL de request:', images.url);
+
+    // Intentar extraer las props reales del objeto Astro.props
+    if (Astro.props.images && Array.isArray(Astro.props.images)) {
+        console.log('✅ Encontradas imágenes reales en Astro.props.images');
+        finalImages = Astro.props.images;
+    } else {
+        console.log('❌ No se encontraron imágenes en Astro.props');
+        finalImages = [];
+    }
+
+    // También verificar otras props
+    if (Astro.props.title) {
+        finalTitle = Astro.props.title;
+    }
+    if (Astro.props.closeText) {
+        finalCloseText = Astro.props.closeText;
+    }
+} else if (Array.isArray(images)) {
+    console.log('✅ Array válido recibido');
+    finalImages = images;
+} else {
+    console.log('❌ Tipo desconocido, usando array vacío');
+    finalImages = [];
+}
+
+console.log('🎯 Final images:', finalImages.length);
+console.log('🎯 Final title:', finalTitle);
+console.log('=== FIN DIAGNÓSTICO ===');
 ---
 
 <div class="min-h-screen bg-third">
@@ -35,7 +81,7 @@ const { images, title, closeText = "Cerrar" } = Astro.props;
     <div class="max-w-7xl mx-auto px-2 md:px-4 py-8">
         <!-- Pinterest Style Gallery -->
         <div id="pinterest-gallery" class="columns-2 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-2 md:gap-4 space-y-2 md:space-y-4">
-            {images.map((image, index) => (
+            {finalImages.map((image, index) => (
                 <div
                     class="break-inside-avoid mb-2 md:mb-4 group cursor-pointer"
                     data-index={index}

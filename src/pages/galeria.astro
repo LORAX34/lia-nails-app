@@ -5,7 +5,14 @@ import { getAllImages } from "@/data/galleryImages";
 import { translations } from "@/i18n/translations";
 
 const t = translations.pt;
-const allImages = getAllImages();
+
+// Forzar SSG - Astro procesará esto durante el build
+export async function getStaticPaths() {
+    return [{ params: {} }];
+}
+
+// Obtener datos durante el build/render
+const allImages = await getAllImages();
 ---
 
 <Layout

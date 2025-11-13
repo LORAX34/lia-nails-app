@@ -1,5 +1,6 @@
 ---
 import type { Translation } from "@/i18n/types";
+import type { GalleryImage } from "@/data/galleryImages";
 import CarrucelGalery from "@/components/CarrucelGalery.astro";
 import { getPreviewImages } from "@/data/galleryImages";
 
@@ -10,7 +11,8 @@ interface Props {
 const { translations: t } = Astro.props;
 
 // Obtener solo las primeras 5 imágenes
-const previewImages = getPreviewImages(5);
+const allPreviewImages = getPreviewImages();
+const previewImages = allPreviewImages.slice(0, 5);
 
 // Función para obtener la URL de la galería completa según el idioma actual
 function getGalleryUrl() {
@@ -116,38 +118,76 @@ const galleryUrl = getGalleryUrl();
         <div class="text-center">
             <button
                 id="view-all-btn"
-                class="inline-flex items-center gap-3 bg-secondary text-third px-8 py-4 rounded-full font-semibold text-lg hover:bg-secondary/90 hover:scale-105 transform transition-all duration-300 shadow-lg hover:shadow-xl group"
+                class="inline-flex items-center gap-3 bg-secondary text-third px-8 py-4 rounded-full font-semibold text-lg hover:bg-secondary/90 hover:scale-105 transform transition-all duration-300 shadow-lg hover:shadow-xl group relative overflow-hidden"
             >
-                <svg
-                    class="w-6 h-6 group-hover:rotate-12 transition-transform duration-300"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                <!-- Texto normal -->
+                <span id="btn-text" class="flex items-center gap-3">
+                    <svg
+                        class="w-6 h-6 group-hover:rotate-12 transition-transform duration-300"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                        ></path>
+                    </svg>
+                    {t.viewAllGallery}
+                    <svg
+                        class="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
+                </span>
+
+                <!-- Spinner de carga (oculto inicialmente) -->
+                <span id="btn-loading" class="hidden items-center gap-3">
+                    <div
+                        class="animate-spin rounded-full h-6 w-6 border-b-2 border-third"
+                    >
+                    </div>
+                    <span>Cargando galería...</span>
+                </span>
+
+                <!-- Overlay de carga -->
+                <div
+                    id="btn-overlay"
+                    class="absolute inset-0 bg-secondary/80 hidden"
                 >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-                    ></path>
-                </svg>
-                {t.viewAllGallery}
-                <svg
-                    class="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                </svg>
+                </div>
             </button>
         </div>
     </div>
 </section>
+
+<!-- Modal de carga global -->
+<div
+    id="global-loading"
+    class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden items-center justify-center"
+>
+    <div class="bg-white rounded-2xl p-8 shadow-2xl max-w-sm mx-4 text-center">
+        <div
+            class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"
+        >
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">
+            Cargando galería
+        </h3>
+        <p class="text-gray-600">
+            Estamos preparando todas las imágenes para ti...
+        </p>
+    </div>
+</div>
 
 <script is:inline define:vars={{ galleryUrl }}>
     function initGalleryCarousel() {
@@ -156,6 +196,7 @@ const galleryUrl = getGalleryUrl();
         const prevBtn = document.getElementById("prev-btn");
         const nextBtn = document.getElementById("next-btn");
         const viewAllBtn = document.getElementById("view-all-btn");
+        const globalLoading = document.getElementById("global-loading");
 
         if (!carousel || !dots.length) return;
 
@@ -214,6 +255,44 @@ const galleryUrl = getGalleryUrl();
             }, 500);
         }
 
+        // Función para mostrar estado de carga
+        function showLoadingState() {
+            const btnText = document.getElementById("btn-text");
+            const btnLoading = document.getElementById("btn-loading");
+            const btnOverlay = document.getElementById("btn-overlay");
+
+            if (btnText && btnLoading && btnOverlay) {
+                btnText.classList.add("hidden");
+                btnLoading.classList.remove("hidden");
+                btnOverlay.classList.remove("hidden");
+            }
+
+            // Mostrar loading global
+            if (globalLoading) {
+                globalLoading.classList.remove("hidden");
+                globalLoading.classList.add("flex");
+            }
+        }
+
+        // Función para ocultar estado de carga
+        function hideLoadingState() {
+            const btnText = document.getElementById("btn-text");
+            const btnLoading = document.getElementById("btn-loading");
+            const btnOverlay = document.getElementById("btn-overlay");
+
+            if (btnText && btnLoading && btnOverlay) {
+                btnText.classList.remove("hidden");
+                btnLoading.classList.add("hidden");
+                btnOverlay.classList.add("hidden");
+            }
+
+            // Ocultar loading global
+            if (globalLoading) {
+                globalLoading.classList.add("hidden");
+                globalLoading.classList.remove("flex");
+            }
+        }
+
         // Event listeners para los puntos
         dots.forEach((dot, index) => {
             dot.addEventListener("click", (e) => {
@@ -241,15 +320,42 @@ const galleryUrl = getGalleryUrl();
             });
         }
 
-        // Event listener para el botón "Ver todos"
+        // Event listener para el botón "Ver todos" - CON ESTADO DE CARGA
         if (viewAllBtn) {
-            viewAllBtn.addEventListener("click", (e) => {
+            viewAllBtn.addEventListener("click", async (e) => {
                 e.preventDefault();
 
-                // Navegar a la galería completa en la misma ventana
-                window.location.href = galleryUrl;
+                // Mostrar estado de carga
+                showLoadingState();
+
+                try {
+                    // Pequeña espera para que se vea el loading
+                    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+                    // Navegar a la galería completa
+                    window.location.href = galleryUrl;
+                } catch (error) {
+                    console.error("Error al navegar:", error);
+                    hideLoadingState();
+
+                    // Fallback en caso de error
+                    setTimeout(() => {
+                        window.location.href = galleryUrl;
+                    }, 500);
+                }
             });
         }
+
+        // También agregar loading al hacer click en las imágenes del carrusel
+        const carouselImages = carousel.querySelectorAll("img");
+        carouselImages.forEach((img) => {
+            img.addEventListener("click", () => {
+                showLoadingState();
+                setTimeout(() => {
+                    window.location.href = galleryUrl;
+                }, 800);
+            });
+        });
 
         // Detectar scroll manual y actualizar puntos (con debounce)
         carousel.addEventListener(
@@ -375,6 +481,7 @@ const galleryUrl = getGalleryUrl();
         border: none;
         outline: none;
         cursor: pointer;
+        transition: all 0.3s ease;
     }
 
     #view-all-btn:hover {
@@ -384,5 +491,50 @@ const galleryUrl = getGalleryUrl();
 
     #view-all-btn:active {
         transform: scale(0.98);
+    }
+
+    #view-all-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* Animación del spinner */
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .animate-spin {
+        animation: spin 1s linear infinite;
+    }
+
+    /* Transiciones suaves */
+    .transition-all {
+        transition: all 0.3s ease;
+    }
+
+    /* Mejoras para el modal de carga */
+    #global-loading {
+        transition: opacity 0.3s ease;
+    }
+
+    /* Efecto de pulso para el botón durante la carga */
+    @keyframes pulse {
+        0%,
+        100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.7;
+        }
+    }
+
+    .loading-pulse {
+        animation: pulse 2s infinite;
     }
 </style>
