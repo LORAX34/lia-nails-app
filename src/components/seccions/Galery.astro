@@ -198,6 +198,7 @@ const galleryUrl = getGalleryUrl();
         const btnText = document.getElementById("btn-text");
         const btnLoading = document.getElementById("btn-loading");
         const btnOverlay = document.getElementById("btn-overlay");
+        const globalLoading = document.getElementById("global-loading");
 
         if (btnText && btnLoading && btnOverlay) {
             btnText.classList.add("hidden");
@@ -205,8 +206,6 @@ const galleryUrl = getGalleryUrl();
             btnOverlay.classList.remove("hidden");
         }
 
-        // Mostrar loading global
-        const globalLoading = document.getElementById("global-loading");
         if (globalLoading) {
             globalLoading.classList.remove("hidden");
             globalLoading.classList.add("flex");
@@ -219,6 +218,7 @@ const galleryUrl = getGalleryUrl();
         const btnText = document.getElementById("btn-text");
         const btnLoading = document.getElementById("btn-loading");
         const btnOverlay = document.getElementById("btn-overlay");
+        const globalLoading = document.getElementById("global-loading");
 
         if (btnText && btnLoading && btnOverlay) {
             btnText.classList.remove("hidden");
@@ -226,8 +226,6 @@ const galleryUrl = getGalleryUrl();
             btnOverlay.classList.add("hidden");
         }
 
-        // Ocultar loading global
-        const globalLoading = document.getElementById("global-loading");
         if (globalLoading) {
             globalLoading.classList.add("hidden");
             globalLoading.classList.remove("flex");
@@ -429,20 +427,23 @@ const galleryUrl = getGalleryUrl();
         }
     });
 
-    // Limpiar siempre al cargar
-    document.addEventListener("DOMContentLoaded", () => {
-        hideLoadingState();
-    });
-
     // Inicializar cuando el DOM esté listo
     if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", initGalleryCarousel);
+        document.addEventListener("DOMContentLoaded", () => {
+            // Limpiar cualquier estado de loading al cargar
+            hideLoadingState();
+            initGalleryCarousel();
+        });
     } else {
+        hideLoadingState();
         initGalleryCarousel();
     }
 
     // Re-inicializar después de navegación
-    document.addEventListener("astro:page-load", initGalleryCarousel);
+    document.addEventListener("astro:page-load", () => {
+        hideLoadingState();
+        initGalleryCarousel();
+    });
 </script>
 
 <style>
