@@ -190,13 +190,56 @@ const galleryUrl = getGalleryUrl();
 </div>
 
 <script is:inline define:vars={{ galleryUrl }}>
+    let navigationInProgress = false;
+
+    function showLoadingState() {
+        if (navigationInProgress) return;
+
+        const btnText = document.getElementById("btn-text");
+        const btnLoading = document.getElementById("btn-loading");
+        const btnOverlay = document.getElementById("btn-overlay");
+
+        if (btnText && btnLoading && btnOverlay) {
+            btnText.classList.add("hidden");
+            btnLoading.classList.remove("hidden");
+            btnOverlay.classList.remove("hidden");
+        }
+
+        // Mostrar loading global
+        const globalLoading = document.getElementById("global-loading");
+        if (globalLoading) {
+            globalLoading.classList.remove("hidden");
+            globalLoading.classList.add("flex");
+        }
+    }
+
+    function hideLoadingState() {
+        navigationInProgress = false;
+
+        const btnText = document.getElementById("btn-text");
+        const btnLoading = document.getElementById("btn-loading");
+        const btnOverlay = document.getElementById("btn-overlay");
+
+        if (btnText && btnLoading && btnOverlay) {
+            btnText.classList.remove("hidden");
+            btnLoading.classList.add("hidden");
+            btnOverlay.classList.add("hidden");
+        }
+
+        // Ocultar loading global
+        const globalLoading = document.getElementById("global-loading");
+        if (globalLoading) {
+            globalLoading.classList.add("hidden");
+            globalLoading.classList.remove("flex");
+        }
+    }
+
     function initGalleryCarousel() {
         const carousel = document.getElementById("gallery-carousel");
         const dots = document.querySelectorAll(".carousel-dot");
         const prevBtn = document.getElementById("prev-btn");
         const nextBtn = document.getElementById("next-btn");
         const viewAllBtn = document.getElementById("view-all-btn");
-        const globalLoading = document.getElementById("global-loading");
 
         if (!carousel || !dots.length) return;
 
@@ -255,42 +298,19 @@ const galleryUrl = getGalleryUrl();
             }, 500);
         }
 
-        // Función para mostrar estado de carga
-        function showLoadingState() {
-            const btnText = document.getElementById("btn-text");
-            const btnLoading = document.getElementById("btn-loading");
-            const btnOverlay = document.getElementById("btn-overlay");
+        // Función para navegar a la galería con manejo de estado
+        function navigateToGallery() {
+            if (navigationInProgress) return;
 
-            if (btnText && btnLoading && btnOverlay) {
-                btnText.classList.add("hidden");
-                btnLoading.classList.remove("hidden");
-                btnOverlay.classList.remove("hidden");
-            }
+            navigationInProgress = true;
 
-            // Mostrar loading global
-            if (globalLoading) {
-                globalLoading.classList.remove("hidden");
-                globalLoading.classList.add("flex");
-            }
-        }
+            // Ocultar loading antes de navegar para evitar que se quede visible
+            hideLoadingState();
 
-        // Función para ocultar estado de carga
-        function hideLoadingState() {
-            const btnText = document.getElementById("btn-text");
-            const btnLoading = document.getElementById("btn-loading");
-            const btnOverlay = document.getElementById("btn-overlay");
-
-            if (btnText && btnLoading && btnOverlay) {
-                btnText.classList.remove("hidden");
-                btnLoading.classList.add("hidden");
-                btnOverlay.classList.add("hidden");
-            }
-
-            // Ocultar loading global
-            if (globalLoading) {
-                globalLoading.classList.add("hidden");
-                globalLoading.classList.remove("flex");
-            }
+            // Navegar después de asegurar que el UI se actualizó
+            requestAnimationFrame(() => {
+                window.location.href = galleryUrl;
+            });
         }
 
         // Event listeners para los puntos
@@ -320,40 +340,27 @@ const galleryUrl = getGalleryUrl();
             });
         }
 
-        // Event listener para el botón "Ver todos" - CON ESTADO DE CARGA
+        // Event listener para el botón "Ver todos" - CORREGIDO
         if (viewAllBtn) {
-            viewAllBtn.addEventListener("click", async (e) => {
+            viewAllBtn.addEventListener("click", (e) => {
                 e.preventDefault();
+                if (navigationInProgress) return;
 
-                // Mostrar estado de carga
                 showLoadingState();
 
-                try {
-                    // Pequeña espera para que se vea el loading
-                    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-                    // Navegar a la galería completa
-                    window.location.href = galleryUrl;
-                } catch (error) {
-                    console.error("Error al navegar:", error);
-                    hideLoadingState();
-
-                    // Fallback en caso de error
-                    setTimeout(() => {
-                        window.location.href = galleryUrl;
-                    }, 500);
-                }
+                // Usar timeout más corto y limpiar antes de navegar
+                setTimeout(navigateToGallery, 800);
             });
         }
 
-        // También agregar loading al hacer click en las imágenes del carrusel
+        // También corregir el click en imágenes del carrusel
         const carouselImages = carousel.querySelectorAll("img");
         carouselImages.forEach((img) => {
             img.addEventListener("click", () => {
+                if (navigationInProgress) return;
+
                 showLoadingState();
-                setTimeout(() => {
-                    window.location.href = galleryUrl;
-                }, 800);
+                setTimeout(navigateToGallery, 800);
             });
         });
 
@@ -402,6 +409,30 @@ const galleryUrl = getGalleryUrl();
         // Inicializar el primer punto como activo
         updateDots(0);
     }
+
+    // Limpiar estado en varios escenarios
+    window.addEventListener("beforeunload", () => {
+        hideLoadingState();
+    });
+
+    document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) {
+            // Página visible again - usuario probablemente volvió
+            hideLoadingState();
+        }
+    });
+
+    window.addEventListener("pageshow", (event) => {
+        // Si es una carga desde cache (back/forward)
+        if (event.persisted) {
+            hideLoadingState();
+        }
+    });
+
+    // Limpiar siempre al cargar
+    document.addEventListener("DOMContentLoaded", () => {
+        hideLoadingState();
+    });
 
     // Inicializar cuando el DOM esté listo
     if (document.readyState === "loading") {
